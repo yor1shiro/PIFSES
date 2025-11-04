@@ -89,10 +89,9 @@ Small e-commerce sellers lose **25% of revenue** to stockouts and overstock situ
 - Go 1.21+ (for backend development)
 
 ### Local Development
-
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/PIFSES.git
+git clone https://github.com/yor1shiro/PIFSES.git
 cd PIFSES
 
 # 2. Setup environment
@@ -108,7 +107,6 @@ docker-compose up -d
 # Grafana: http://localhost:3001
 # Prometheus: http://localhost:9090
 ```
-
 ### Service Status
 ```bash
 # Check all services
@@ -123,6 +121,24 @@ docker-compose logs -f ml-pipeline
 ---
 
 ## 📊 Live Demo
+
+## 🖼️ Screenshots
+
+Below are a few screenshots showcasing the dashboard and key features. These files are included at the repository root and will render on GitHub when published.
+
+<p align="center">
+   <img src="./image1.png" alt="Screenshot 1 - Overview" width="380" />
+   <img src="./image2.png" alt="Screenshot 2 - Sales Forecast" width="380" />
+</p>
+
+<p align="center">
+   <img src="./image3.png" alt="Screenshot 3 - Inventory" width="380" />
+   <img src="./image4.png" alt="Screenshot 4 - Reorders Gantt" width="380" />
+</p>
+
+<p align="center">
+   <img src="./image5.png" alt="Screenshot 5 - Analytics & Anomalies" width="760" />
+</p>
 
 ### Dashboard Features
 - **7 Real-Time Metrics**: Total products, forecast accuracy, stockouts prevented, revenue impact, automated reorders, prediction confidence, model ensemble status
@@ -194,7 +210,6 @@ PIFSES/
 ├── docker-compose.yml        # Local dev environment
 ├── .gitignore               # Comprehensive secret protection
 ├── .env.example             # Environment template
-├──              # Security best practices
 └── README.md               # This file
 ```
 
@@ -205,7 +220,6 @@ PIFSES/
 ### Environment Variables
 
 Copy `.env.example` to `.env.local` and configure:
-
 ```env
 # Frontend
 NEXT_PUBLIC_API_URL=http://localhost:8080
@@ -226,8 +240,6 @@ SHOPIFY_API_KEY=your-key
 ETSY_API_KEY=your-key
 AMAZON_SELLER_ID=your-id
 ```
-
-For production deployment, use GitHub Secrets. See [SECURITY.md](./SECURITY.md).
 
 ---
 
@@ -319,17 +331,6 @@ cd ml-pipeline && pytest
 
 ---
 
-## 🎯 Roadmap
-
-- [ ] Real-time WebSocket updates
-- [ ] Advanced anomaly detection with isolation forests
-- [ ] Mobile app (React Native)
-- [ ] Slack/Discord notifications
-- [ ] Cost optimization recommendations
-- [ ] Supplier performance analytics
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these guidelines:
@@ -350,7 +351,7 @@ Contributions are welcome! Please follow these guidelines:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the **MIT License** 
 
 ---
 
@@ -366,15 +367,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE
 - ✅ Professional UI/UX (Tailwind CSS, Recharts)
 - ✅ DevOps & monitoring (Prometheus, Grafana)
 - ✅ Security best practices
-
----
-
-## 📞 Contact & Support
-
-- 📧 Email: [your-email@example.com]
-- 💼 LinkedIn: [your-linkedin-url]
-- 🐙 GitHub: [your-github-url]
-- 🌐 Portfolio: [your-portfolio-url]
 
 ---
 
@@ -418,22 +410,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE
 ## License
 
 Proprietary - This SaaS platform is proprietary software. Unauthorized reproduction is prohibited.
-
-## Support
-
-For issues and questions:
-- Email: support@pifses.io
-- Docs: https://docs.pifses.io
-- Slack: [Community Workspace Link]
-
-## Roadmap
-
-- [ ] Multi-tenant role-based access control (RBAC)
-- [ ] Advanced what-if scenario modeling with Bayesian optimization
-- [ ] Mobile app (React Native) for on-the-go monitoring
-- [ ] AI chatbot for natural language queries
-- [ ] Integration with more platforms (WooCommerce, Amazon, eBay)
-- [ ] Automated financial reconciliation and P&L reporting
 
 ---
 
