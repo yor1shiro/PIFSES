@@ -162,8 +162,6 @@ docker-compose logs -f ml-pipeline
 - ✅ GitHub secret scanning ready
 - ✅ Pre-commit hooks available
 
-See [SECURITY.md](./SECURITY.md) for detailed security configuration.
-
 ---
 
 ## 📦 Project Structure
@@ -196,7 +194,7 @@ PIFSES/
 ├── docker-compose.yml        # Local dev environment
 ├── .gitignore               # Comprehensive secret protection
 ├── .env.example             # Environment template
-├── SECURITY.md              # Security best practices
+├──              # Security best practices
 └── README.md               # This file
 ```
 
@@ -317,7 +315,6 @@ cd ml-pipeline && pytest
 
 ## 📚 Documentation
 
-- **[SECURITY.md](./SECURITY.md)** - Security configuration & best practices
 - **[.env.example](./.env.example)** - Environment variable template
 
 ---
