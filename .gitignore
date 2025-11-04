@@ -1,0 +1,275 @@
+# ====================
+# ENVIRONMENT VARIABLES & SECRETS
+# ====================
+.github
+.env
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+.env.test.local
+.env.example.local
+secrets/
+credentials/
+.secrets/
+
+# ====================
+# NODE.JS / FRONTEND
+# ====================
+node_modules/
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-store/
+
+# ====================
+# GO / BACKEND SERVICES
+# ====================
+*.exe
+*.exe~
+*.dll
+*.so
+*.so.*
+*.dylib
+*.test
+*.out
+go.sum
+vendor/
+dist/
+bin/
+
+# ====================
+# PYTHON / ML PIPELINE
+# ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+*.pyc
+
+# ====================
+# DATABASE & DATA
+# ====================
+*.db
+*.sqlite
+*.sqlite3
+*.pgpass
+cassandra/data/
+postgres/data/
+redis/data/
+database.yml
+secrets.yml
+*.dump
+
+# ====================
+# IDEs & EDITORS
+# ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+.vs/
+*.code-workspace
+.vscode-test/
+.history/
+.classpath
+.project
+.settings/
+*.sublime-workspace
+*.iml
+*.iws
+*.ipr
+out/
+
+# ====================
+# OPERATING SYSTEMS
+# ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.AppleDB
+Thumbs.db
+Desktop.ini
+.directory
+Network Trash Folder
+Temporary Items
+
+# ====================
+# LOGS & TEMPORARY
+# ====================
+logs/
+*.log
+npm-debug.log
+yarn-debug.log
+lerna-debug.log
+tmp/
+temp/
+.local/
+*.tmp
+*.bak
+
+# ====================
+# BUILD OUTPUTS
+# ====================
+build/
+out/
+dist/
+target/
+
+# ====================
+# TEST COVERAGE & REPORTS
+# ====================
+coverage/
+.coverage
+.nyc_output/
+junit.xml
+test-results/
+
+# ====================
+# DOCKER
+# ====================
+.docker/
+docker-compose.override.yml
+
+# ====================
+# CREDENTIALS & SECURITY
+# ====================
+*.pem
+*.key
+*.cert
+*.crt
+*.pub
+.aws/
+.ssh/
+.gcloud/
+google-cloud-key.json
+kubeconfig
+kubeconfig.yaml
+*.kubeconfig
+api_keys.txt
+tokens.json
+jwt_secret.txt
+credentials.json
+secrets.json
+private_keys/
+
+# ====================
+# MONITORING & INFRASTRUCTURE
+# ====================
+grafana/provisioning/dashboards/*.json
+prometheus/data/
+temporal/data/
+infrastructure/secrets/
+
+# ====================
+# CACHE & TEMP FILES
+# ====================
+.cache/
+.eslintcache
+.stylelintcache
+node_modules/.cache
+
+# ====================
+# SENSITIVE DOCUMENTATION
+# ====================
+SECRETS.md
+API_KEYS.md
+CREDENTIALS.md
+sensitive_data.txt
+PRIVATE_NOTES.md
+
+# ====================
+# VCS BACKUPS
+# ====================
+*.orig
+*.backup
+*.bak
+
+# ====================
+# IDE SPECIFIC
+# ====================
+.vim/
+.viminfo
+*~
+
+# ====================
+# CI/CD
+# ====================
+.github/workflows/secrets.yml
+
+# ====================
+# CLOUD PROVIDER KEYS
+# ====================
+# AWS
+aws_credentials
+AWS_CREDENTIALS
+.aws/credentials
+.aws/config
+
+# GCP
+.gcp/
+.gcloud/
+gcloud-key.json
+
+# Azure
+.azure/
+
+# ====================
+# CERTIFICATE & KEY FILES
+# ====================
+*.csr
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# ====================
+# DEPENDENCY LOCK FILES (optional - comment out if needed)
+# ====================
+# Uncomment to ignore lock files (usually want to commit these)
+# package-lock.json
+# yarn.lock
+# go.sum

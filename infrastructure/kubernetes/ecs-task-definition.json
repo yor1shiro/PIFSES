@@ -1,0 +1,106 @@
+{
+  "version": "2024-01-01",
+  "containerDefinitions": [
+    {
+      "name": "api-gateway",
+      "image": "pifses/api-gateway:latest",
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "8080"
+        },
+        {
+          "name": "LOG_LEVEL",
+          "value": "info"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/pifses/api-gateway",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8080/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    },
+    {
+      "name": "forecasting-service",
+      "image": "pifses/forecasting-service:latest",
+      "memory": 1024,
+      "cpu": 512,
+      "portMappings": [
+        {
+          "containerPort": 8081,
+          "hostPort": 8081,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "8081"
+        },
+        {
+          "name": "TEMPORAL_SERVER",
+          "value": "temporal:7233"
+        }
+      ]
+    },
+    {
+      "name": "integration-service",
+      "image": "pifses/integration-service:latest",
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 8082,
+          "hostPort": 8082,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "name": "ml-pipeline",
+      "image": "pifses/ml-pipeline:latest",
+      "memory": 2048,
+      "cpu": 1024,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "PYTHONUNBUFFERED",
+          "value": "1"
+        }
+      ]
+    }
+  ],
+  "family": "pifses-stack",
+  "networkMode": "bridge",
+  "requiresCompatibilities": [
+    "EC2"
+  ]
+}

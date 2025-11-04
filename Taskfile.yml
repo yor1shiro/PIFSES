@@ -1,0 +1,94 @@
+version: '3'
+
+tasks:
+  dev:
+    desc: Start development environment
+    cmds:
+      - docker-compose up -d
+      - echo "Services started. Frontend will be available at http://localhost:3000"
+
+  frontend:dev:
+    desc: Start frontend development server
+    dir: frontend
+    cmds:
+      - npm install
+      - npm run dev
+
+  backend:gateway:
+    desc: Start API Gateway
+    dir: backend/api-gateway
+    cmds:
+      - go mod tidy
+      - go run main.go
+
+  backend:forecasting:
+    desc: Start Forecasting Service
+    dir: backend/forecasting-service
+    cmds:
+      - go mod tidy
+      - go run main.go
+
+  backend:integration:
+    desc: Start Integration Service
+    dir: backend/integration-service
+    cmds:
+      - go mod tidy
+      - go run main.go
+
+  ml:dev:
+    desc: Start ML Pipeline service
+    dir: ml-pipeline
+    cmds:
+      - pip install -r requirements.txt
+      - python main.py
+
+  docker:build:
+    desc: Build all Docker images
+    cmds:
+      - bash build-and-push.sh pifses latest
+
+  docker:logs:
+    desc: View Docker logs
+    cmds:
+      - docker-compose logs -f
+
+  test:go:
+    desc: Run Go tests
+    cmds:
+      - go test ./backend/...
+
+  test:python:
+    desc: Run Python tests
+    dir: ml-pipeline
+    cmds:
+      - pytest .
+
+  test:frontend:
+    desc: Run frontend tests
+    dir: frontend
+    cmds:
+      - npm test
+
+  lint:
+    desc: Run linters
+    cmds:
+      - cd frontend && npm run lint
+      - go fmt ./...
+
+  format:
+    desc: Format code
+    cmds:
+      - cd frontend && prettier --write .
+      - cd ml-pipeline && black .
+      - go fmt ./...
+
+  clean:
+    desc: Clean up containers and volumes
+    cmds:
+      - docker-compose down -v
+      - rm -rf node_modules
+
+  setup:init:
+    desc: Initialize development environment
+    cmds:
+      - bash init-dev.sh

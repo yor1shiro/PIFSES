@@ -1,0 +1,48 @@
+groups:
+  - name: pifses_alerts
+    interval: 30s
+    rules:
+      # API Gateway Alerts
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }}"
+
+      # Forecasting Service Alerts
+      - alert: ForecastingServiceDown
+        expr: up{job="forecasting-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Forecasting service is down"
+
+      # Kafka Alerts
+      - alert: KafkaLagHigh
+        expr: kafka_consumer_lag > 1000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka consumer lag is high"
+
+      # Database Alerts
+      - alert: CassandraDown
+        expr: up{job="cassandra"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Cassandra database is down"
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container memory usage is high: {{ $value | humanizePercentage }}"

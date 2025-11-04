@@ -1,0 +1,265 @@
+version: '3.8'
+
+services:
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: pifses-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8080
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - pifses-network
+    depends_on:
+      - api-gateway
+
+  # Go API Gateway
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile
+    container_name: pifses-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - KAFKA_BROKERS=kafka:9092
+      - CASSANDRA_HOSTS=cassandra
+      - CASSANDRA_PORT=9042
+      - REDIS_URL=redis://redis:6379
+      - FORECASTING_SERVICE_URL=http://forecasting-service:8081
+      - INTEGRATION_SERVICE_URL=http://integration-service:8082
+      - LOG_LEVEL=debug
+    networks:
+      - pifses-network
+    depends_on:
+      - kafka
+      - cassandra
+      - redis
+
+  # Go Forecasting Service
+  forecasting-service:
+    build:
+      context: ./backend/forecasting-service
+      dockerfile: Dockerfile
+    container_name: pifses-forecasting-service
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - KAFKA_BROKERS=kafka:9092
+      - CASSANDRA_HOSTS=cassandra
+      - CASSANDRA_PORT=9042
+      - REDIS_URL=redis://redis:6379
+      - ML_SERVICE_URL=http://ml-pipeline:8000
+      - TEMPORAL_SERVER=temporal:7233
+      - LOG_LEVEL=debug
+    networks:
+      - pifses-network
+    depends_on:
+      - kafka
+      - cassandra
+      - redis
+      - ml-pipeline
+      - temporal
+
+  # Go Integration Service
+  integration-service:
+    build:
+      context: ./backend/integration-service
+      dockerfile: Dockerfile
+    container_name: pifses-integration-service
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - KAFKA_BROKERS=kafka:9092
+      - REDIS_URL=redis://redis:6379
+      - SHOPIFY_API_VERSION=2024-01
+      - ETSY_API_URL=https://api.etsy.com/v3
+      - LOG_LEVEL=debug
+    networks:
+      - pifses-network
+    depends_on:
+      - kafka
+      - redis
+
+  # Python ML Pipeline (FastAPI)
+  ml-pipeline:
+    build:
+      context: ./ml-pipeline
+      dockerfile: Dockerfile
+    container_name: pifses-ml-pipeline
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CASSANDRA_HOSTS=cassandra
+      - CASSANDRA_PORT=9042
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=debug
+    volumes:
+      - ./ml-pipeline/models:/app/models
+      - ./ml-pipeline/data:/app/data
+    networks:
+      - pifses-network
+    depends_on:
+      - cassandra
+      - redis
+
+  # Apache Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: pifses-kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - pifses-network
+    depends_on:
+      - zookeeper
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: pifses-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - pifses-network
+
+  # Apache Cassandra
+  cassandra:
+    image: cassandra:4.1
+    container_name: pifses-cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=pifses-cluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_SEEDS=cassandra
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - ./infrastructure/cassandra/init.cql:/docker-entrypoint-initdb.d/init.cql
+    networks:
+      - pifses-network
+    healthcheck:
+      test: ["CMD", "cqlsh", "-u", "cassandra", "-p", "cassandra", "-e", "describe cluster"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache & Feature Store
+  redis:
+    image: redis:7.2-alpine
+    container_name: pifses-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - pifses-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Temporal Server for Workflow Orchestration
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: pifses-temporal
+    ports:
+      - "7233:7233"
+      - "7234:7234"
+      - "7235:7235"
+      - "7236:7236"
+      - "8233:8233"
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgres
+      - DYNAMIC_CONFIG_FILE_PATH=/etc/temporal/config/dynamicconfig.yaml
+    volumes:
+      - ./infrastructure/temporal/dynamicconfig.yaml:/etc/temporal/config/dynamicconfig.yaml
+      - temporal-data:/var/lib/temporal
+    networks:
+      - pifses-network
+    depends_on:
+      - postgres-temporal
+
+  # PostgreSQL for Temporal
+  postgres-temporal:
+    image: postgres:15-alpine
+    container_name: pifses-postgres-temporal
+    environment:
+      - POSTGRES_USER=temporal
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_DB=temporal
+    volumes:
+      - postgres-temporal-data:/var/lib/postgresql/data
+    networks:
+      - pifses-network
+
+  # Prometheus for Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pifses-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - pifses-network
+
+  # Grafana for Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pifses-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./infrastructure/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - pifses-network
+    depends_on:
+      - prometheus
+
+volumes:
+  cassandra-data:
+  redis-data:
+  postgres-temporal-data:
+  temporal-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  pifses-network:
+    driver: bridge

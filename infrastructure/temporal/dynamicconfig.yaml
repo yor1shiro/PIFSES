@@ -1,0 +1,46 @@
+version: '1'
+
+# Temporal workflow configurations
+persistence:
+  defaultStore: postgres
+  visibilityStore: postgres
+  numHistoryShards: 4
+  stores:
+    postgres:
+      sql:
+        pluginName: postgres
+        driverName: postgres
+        masterDSN: "user=temporal password=temporal host=postgres-temporal port=5432 dbname=temporal sslmode=disable"
+        maxConns: 20
+        maxIdleConns: 20
+        maxConnLifetime: 1h
+
+global:
+  membership:
+    maxJoinDuration: 10s
+    broadcastAddress: temporal
+
+services:
+  frontend:
+    rpc:
+      grpcPort: 7233
+      membershipPort: 6933
+      bindOnLocalHost: true
+
+  matching:
+    rpc:
+      grpcPort: 7234
+      membershipPort: 6934
+      bindOnLocalHost: true
+
+  history:
+    rpc:
+      grpcPort: 7235
+      membershipPort: 6935
+      bindOnLocalHost: true
+
+  worker:
+    rpc:
+      grpcPort: 7236
+      membershipPort: 6936
+      bindOnLocalHost: true
