@@ -30,6 +30,26 @@ Small e-commerce sellers lose **25% of revenue** to stockouts and overstock situ
 
 ---
 
+## 🖼️ Screenshots
+
+Below are a few screenshots showcasing the dashboard and key features. These files are included at the repository root and will render on GitHub when published.
+
+<p align="center">
+   <img src="./image1.png" alt="Screenshot 1 - Overview" width="380" />
+   <img src="./image2.png" alt="Screenshot 2 - Sales Forecast" width="380" />
+</p>
+
+<p align="center">
+   <img src="./image3.png" alt="Screenshot 3 - Inventory" width="380" />
+   <img src="./image4.png" alt="Screenshot 4 - Reorders Gantt" width="380" />
+</p>
+
+<p align="center">
+   <img src="./image5.png" alt="Screenshot 5 - Analytics & Anomalies" width="760" />
+</p>
+
+---
+
 ## ✨ Key Features
 
 ### 🎯 AI-Powered Forecasting
@@ -121,24 +141,6 @@ docker-compose logs -f ml-pipeline
 ---
 
 ## 📊 Live Demo
-
-## 🖼️ Screenshots
-
-Below are a few screenshots showcasing the dashboard and key features. These files are included at the repository root and will render on GitHub when published.
-
-<p align="center">
-   <img src="./image1.png" alt="Screenshot 1 - Overview" width="380" />
-   <img src="./image2.png" alt="Screenshot 2 - Sales Forecast" width="380" />
-</p>
-
-<p align="center">
-   <img src="./image3.png" alt="Screenshot 3 - Inventory" width="380" />
-   <img src="./image4.png" alt="Screenshot 4 - Reorders Gantt" width="380" />
-</p>
-
-<p align="center">
-   <img src="./image5.png" alt="Screenshot 5 - Analytics & Anomalies" width="760" />
-</p>
 
 ### Dashboard Features
 - **7 Real-Time Metrics**: Total products, forecast accuracy, stockouts prevented, revenue impact, automated reorders, prediction confidence, model ensemble status
